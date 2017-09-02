@@ -1,0 +1,161 @@
+壓縮指令:
+/// 簡介
+*.Z         compress 程式壓縮的檔案；
+*.zip       zip 程式壓縮的檔案；
+*.gz        gzip 程式壓縮的檔案；
+*.bz2       bzip2 程式壓縮的檔案；
+*.xz        xz 程式壓縮的檔案；
+*.tar       tar 程式打包的資料，並沒有壓縮過；
+*.tar.gz    tar 程式打包的檔案，其中並且經過 gzip 的壓縮
+*.tar.bz2   tar 程式打包的檔案，其中並且經過 bzip2 的壓縮
+*.tar.xz    tar 程式打包的檔案，其中並且經過 xz 的壓縮
+
+[dmtsai@study ~]$ gzip [-cdtv#] 檔名
+[dmtsai@study ~]$ zcat 檔名.gz
+選項與參數：
+-c  ：將壓縮的資料輸出到螢幕上，可透過資料流重導向來處理；
+-d  ：解壓縮的參數；
+-t  ：可以用來檢驗一個壓縮檔的一致性～看看檔案有無錯誤；
+-v  ：可以顯示出原檔案/壓縮檔案的壓縮比等資訊；
+-#  ：# 為數字的意思，代表壓縮等級，-1 最快，但是壓縮比最差、-9 最慢，但是壓縮比最好！預設是 -6
+
+範例一：找出 /etc 底下 (不含子目錄) 容量最大的檔案，並將它複製到 /tmp ，然後以 gzip 壓縮
+[dmtsai@study ~]$ ls -ldSr /etc/*   # 忘記選項意義？請自行 man 囉！
+.....(前面省略).....
+-rw-r--r--.  1 root root    25213 Jun 10  2014 /etc/dnsmasq.conf
+-rw-r--r--.  1 root root    69768 May  4 17:55 /etc/ld.so.cache
+-rw-r--r--.  1 root root   670293 Jun  7  2013 /etc/services
+
+[dmtsai@study ~]$ cd /tmp 
+[dmtsai@study tmp]$ cp /etc/services .
+[dmtsai@study tmp]$ gzip -v services
+services:        79.7% -- replaced with services.gz
+[dmtsai@study tmp]$ ll /etc/services /tmp/services*
+-rw-r--r--. 1 root   root   670293 Jun  7  2013 /etc/services
+-rw-r--r--. 1 dmtsai dmtsai 136088 Jun 30 18:40 /tmp/services.gz
+
+範例二：由於 services 是文字檔，請將範例一的壓縮檔的內容讀出來！
+[dmtsai@study tmp]$ zcat services.gz
+# 由於 services 這個原本的檔案是是文字檔，因此我們可以嘗試使用 zcat/zmore/zless 去讀取！
+# 此時螢幕上會顯示 servcies.gz 解壓縮之後的原始檔案內容！
+
+範例三：將範例一的檔案解壓縮
+[dmtsai@study tmp]$ gzip -d services.gz
+# 鳥哥不要使用 gunzip 這個指令，不好背！使用 gzip -d 來進行解壓縮！
+# 與 gzip 相反， gzip -d 會將原本的 .gz 刪除，回復到原本的 services 檔案。
+
+範例四：將範例三解開的 services 用最佳的壓縮比壓縮，並保留原本的檔案
+[dmtsai@study tmp]$ gzip -9 -c services > services.gz
+
+範例五：由範例四再次建立的 services.gz 中，找出 http 這個關鍵字在哪幾行？
+[dmtsai@study tmp]$ zgrep -n 'http' services.gz
+14:#       http://www.iana.org/assignments/port-numbers
+89:http            80/tcp          www www-http    # WorldWideWeb HTTP
+90:http            80/udp          www www-http    # HyperText Transfer Protocol
+
+
+[dmtsai@study ~]$ bzip2 [-cdkzv#] 檔名
+[dmtsai@study ~]$ bzcat 檔名.bz2
+選項與參數：
+-c  ：將壓縮的過程產生的資料輸出到螢幕上！
+-d  ：解壓縮的參數
+-k  ：保留原始檔案，而不會刪除原始的檔案喔！
+-z  ：壓縮的參數 (預設值，可以不加)
+-v  ：可以顯示出原檔案/壓縮檔案的壓縮比等資訊；
+-#  ：與 gzip 同樣的，都是在計算壓縮比的參數， -9 最佳， -1 最快！
+
+範例一：將剛剛 gzip 範例留下來的 /tmp/services 以 bzip2 壓縮
+[dmtsai@study tmp]$ bzip2 -v services
+  services:  5.409:1,  1.479 bits/byte, 81.51% saved, 670293 in, 123932 out.
+[dmtsai@study tmp]$ ls -l services*
+-rw-r--r--. 1 dmtsai dmtsai 123932 Jun 30 18:40 services.bz2
+-rw-rw-r--. 1 dmtsai dmtsai 135489 Jun 30 18:46 services.gz
+# 此時 services 會變成 services.bz2 之外，你也可以發現 bzip2 的壓縮比要較 gzip 好喔！！
+# 壓縮率由 gzip 的 79% 提升到 bzip2 的 81% 哩！
+
+範例二：將範例一的檔案內容讀出來！
+[dmtsai@study tmp]$ bzcat services.bz2
+
+範例三：將範例一的檔案解壓縮
+[dmtsai@study tmp]$ bzip2 -d services.bz2
+
+範例四：將範例三解開的 services 用最佳的壓縮比壓縮，並保留原本的檔案
+[dmtsai@study tmp]$ bzip2 -9 -c services > services.bz2
+
+[dmtsai@study ~]$ xz [-dtlkc#] 檔名
+[dmtsai@study ~]$ xcat 檔名.xz
+選項與參數：
+-d  ：就是解壓縮啊！
+-t  ：測試壓縮檔的完整性，看有沒有錯誤
+-l  ：列出壓縮檔的相關資訊
+-k  ：保留原本的檔案不刪除～
+-c  ：同樣的，就是將資料由螢幕上輸出的意思！
+-#  ：同樣的，也有較佳的壓縮比的意思！
+
+範例一：將剛剛由 bzip2 所遺留下來的 /tmp/services 透過 xz 來壓縮！
+[dmtsai@study tmp]$ xz -v services
+services (1/1)
+  100 %        97.3 KiB / 654.6 KiB = 0.149
+
+[dmtsai@study tmp]$ ls -l services*
+-rw-rw-r--. 1 dmtsai dmtsai 123932 Jun 30 19:09 services.bz2
+-rw-rw-r--. 1 dmtsai dmtsai 135489 Jun 30 18:46 services.gz
+-rw-r--r--. 1 dmtsai dmtsai  99608 Jun 30 18:40 services.xz
+# 各位觀眾！看到沒有啊！！容量又進一步下降的更多耶！好棒的壓縮比！
+
+範例二：列出這個壓縮檔的資訊，然後讀出這個壓縮檔的內容
+[dmtsai@study tmp]$ xz -l services.xz
+Strms  Blocks   Compressed Uncompressed  Ratio  Check   Filename
+    1       1     97.3 KiB    654.6 KiB  0.149  CRC64   services.xz
+# 竟然可以列出這個檔案的壓縮前後的容量，真是太人性化了！這樣觀察就方便多了！
+
+[dmtsai@study tmp]$ xzcat services.xz
+
+範例三：將他解壓縮吧！
+[dmtsai@study tmp]$ xz -d services.xz
+
+範例四：保留原檔案的檔名，並且建立壓縮檔！
+[dmtsai@study tmp]$ xz -k services
+
+
+
+打包 // tar
+
+[dmtsai@study ~]$ tar [-z|-j|-J] [cv] [-f 待建立的新檔名] filename... <==打包與壓縮
+[dmtsai@study ~]$ tar [-z|-j|-J] [tv] [-f 既有的 tar檔名]             <==察看檔名
+[dmtsai@study ~]$ tar [-z|-j|-J] [xv] [-f 既有的 tar檔名] [-C 目錄]   <==解壓縮
+選項與參數：
+-c  ：建立打包檔案，可搭配 -v 來察看過程中被打包的檔名(filename)
+-t  ：察看打包檔案的內容含有哪些檔名，重點在察看『檔名』就是了；
+-x  ：解打包或解壓縮的功能，可以搭配 -C (大寫) 在特定目錄解開
+      特別留意的是， -c, -t, -x 不可同時出現在一串指令列中。
+-z  ：透過 gzip  的支援進行壓縮/解壓縮：此時檔名最好為 *.tar.gz
+-j  ：透過 bzip2 的支援進行壓縮/解壓縮：此時檔名最好為 *.tar.bz2
+-J  ：透過 xz    的支援進行壓縮/解壓縮：此時檔名最好為 *.tar.xz
+      特別留意， -z, -j, -J 不可以同時出現在一串指令列中
+-v  ：在壓縮/解壓縮的過程中，將正在處理的檔名顯示出來！
+-f filename：-f 後面要立刻接要被處理的檔名！建議 -f 單獨寫一個選項囉！(比較不會忘記)
+-C 目錄    ：這個選項用在解壓縮，若要在特定目錄解壓縮，可以使用這個選項。
+
+其他後續練習會使用到的選項介紹：
+-p(小寫) ：保留備份資料的原本權限與屬性，常用於備份(-c)重要的設定檔
+-P(大寫) ：保留絕對路徑，亦即允許備份資料中含有根目錄存在之意；
+--exclude=FILE：在壓縮的過程中，不要將 FILE 打包！ 
+
+
+
+////背
+bzip版本
+壓　縮：tar -jcv -f filename.tar.bz2 要被壓縮的檔案或目錄名稱
+查　詢：tar -jtv -f filename.tar.bz2
+解壓縮：tar -jxv -f filename.tar.bz2 -C 欲解壓縮的目錄
+
+gzip版本
+壓　縮：tar -zcv -f filename.tar.gz 要被壓縮的檔案或目錄名稱
+查　詢：tar -ztv -f filename.tar.gz
+解壓縮：tar -zxv -f filename.tar.gz -C 欲解壓縮的目錄
+
+xz版本
+壓　縮：tar -Jcv -f filename.tar.xz 要被壓縮的檔案或目錄名稱
+查　詢：tar -Jtv -f filename.tar.xz
+解壓縮：tar -Jxv -f filename.tar.xz -C 欲解壓縮的目錄
