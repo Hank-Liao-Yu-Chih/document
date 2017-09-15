@@ -1,0 +1,19 @@
+diff --git "a/Liux_Bash\346\225\231\345\255\270.txt" "b/Liux_Bash\346\225\231\345\255\270.txt"
+index 5fe87e1..79e0ccf 100644
+--- "a/Liux_Bash\346\225\231\345\255\270.txt"
++++ "b/Liux_Bash\346\225\231\345\255\270.txt"
+@@ -1,6 +1,6 @@
+ 命令別名設定功能： (alias)
+ alias lm='ls -al'
+-
++iiiiii
+ 查詢指令是否為 Bash shell 的內建命令： type
+ [dmtsai@study ~]$ type [-tpa] name
+ 選項與參數：
+@@ -274,4 +274,4 @@ root       <==因為 username 沒有設定，所以主動給予名為 root 的
+ [dmtsai@study ~]$ username="vbird tsai" <==主動設定 username 的內容
+ [dmtsai@study ~]$ username=${username-root}
+ [dmtsai@study ~]$ echo ${username}
+-vbird tsai <==因為 username 已經設定了，所以使用舊有的設定而不以 root 取代
+\ No newline at end of file
++vbird tsai <==因為 username 已經設定了，所以使用舊有的設定而不以 root 取代

@@ -1,0 +1,10 @@
+diff --git a/test.txt b/test.txt
+index e9aac6e..f4c74d3 100644
+--- a/test.txt
++++ b/test.txt
+@@ -8,4 +8,4 @@ OOOOMTK
+ MTK is good
+ 
+ hello
+-
++mediatek WSD
