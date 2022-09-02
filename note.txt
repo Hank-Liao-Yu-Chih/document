@@ -1,0 +1,145 @@
+
+// 拉code
+
+
+
+Hi all,
+
+昨天讨论结果。
+1．	目前分支策略如下：
+	master： 代码完全和sunplus 保持一致。
+	vcl-subsys:  开发分支
+	q645_dev:  用作q645 evb 分支 (待拉取)
+2．	已基于最新的vcl-subsys 打了tag: Q645_FPGA, 如果想拉取这个点的代码，命令如下:
+	python3 ~/bin/repo init -u ssh://git.vicoretek.com:7999/men/manifest.git -b refs/tags/Q645_FPGA -m Q645_FPGA.xml
+	python3 ~/bin/repo init -u ssh://git.vicoretek.com:7999/men/manifest.git -b vcl-subsys -m Q645_FPGA.xml
+	python3 ~/bin/repo init -u ssh://git@192.168.110.57:7999/men/manifest.git -b vcl-subsys -m Q645_FPGA.xml
+	
+	python3 ~/bin/repo init -u ssh://git@192.168.110.57:7999/men/manifest.git -b vcl-subsys -m Q645_FPGA.xml
+	repo init -u ssh://git.vicoretek.com:7999/men/manifest.git -b refs/tags/Q645_FPGA -m Q645_FPGA.xml
+	repo init -u ssh://git.vicoretek.com:7999/men/manifest.git -b refs/tags/Q645_FPGA -m Q645_FPGA.xml
+	python3 ~/bin/repo sync
+3．	目前代码同步策略
+	自动同步： 每晚12点会自动同步sunplus 的github EE 代码到vicoretek git 仓的master 分支
+	手动同步： 大家根据需要定期手动从master 分支同步代码到对应的开发分支上。
+详细信息可参考wiki: 勐海代码管理 - Platform Software - Vicoretek
+
+
+
+
+python3 ~/bin/repo init -u ssh://git@192.168.110.57:7999/men/manifest.git -b q645_dev
+python3 ~/bin/repo sync
+
+python3 ~/bin/repoinit -u ssh://git@192.168.110.57:7999/men/manifest.git -b q645_dev --reference=/home/shared/menghai
+python3 ~/bin/repo sync
+
+
+
+python3 ~/bin/repo init -u ssh://git@192.168.110.57:7999/men/manifest.git -b q645_dev --reference=/home/shared/menghai
+python3 ~/bin/repo sync
+git remote add gitlab git@swgit.vicorelogic.com:sp7021/linux.git
+git remote update gitlab
+git checkout -b gitlab remotes/gitlab/q645_dev
+
+
+
+到213 server 去repo sync
+ ../git-repo/repo  init -u ssh://git@192.168.110.57:7999/men/manifest.git -b q645_dev --reference=/home/shared/menghai
+ ../git-repo/repo  sync
+ (切換到merge sunplus)
+複製到
+
+scp -r -P 22 hankliao@192.168.10.213:/home/hankliao/work/repo_code_base/ .
+
+git remote add gitlab git@swgit.vicorelogic.com:sp7021/linux.git
+git remote update gitlab
+git checkout -b gitlab remotes/gitlab/q645_dev
+
+
+remotes/m/q645_dev -> origin/q645_dev_merge_sunplus
+remotes/m/q645_dev -> origin/q645_dev
+
+
+LD_LIBRARY_PATH=lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+
+
+
+// copy kernel image
+
+~/work/driver_2022_06_06_repo/out/boot2linux_SDcard
+scp -r -P 22 hankliao@192.168.10.213:/home/hankliao/work/driver_2022_06_06_repo/out/boot2linux_SDcard .
+
+
+
+scp -r -P 22 hankliao@192.168.10.61:/home/hankliao/work/driver_2022_05_11/sp7021/linux/vicore_sdk/tests/gtest_vioHW_stereotest .
+scp -r -P 22 hankliao@192.168.10.61:/home/hankliao/work/driver_2022_05_11/sp7021/linux/vicore_sdk/tests/pipe_config_json/Stereoinjector_test1.json .
+scp -r -P 22 hankliao@192.168.10.61:/home/hankliao/work/driver_2022_05_11/sp7021/linux/vicore_sdk/tests/log.conf .
+scp -r -P 22 hankliao@192.168.10.61:/home/hankliao/work/driver_2022_05_11/sp7021/linux/vicore_sdk/output/ .
+scp -r -P 22 hankliao@192.168.10.61:/home/hankliao/work/driver_2022_05_11/sp7021/linux/vicore_sdk/tests/DataSet .
+
+scp -r -P 22 hankliao@192.168.10.213:/home/hankliao/work/driver_2022_04_11/sp7021/tests/slam_service .
+scp -r -P 22 hankliao@192.168.10.61:/home/hankliao/work/driver_2022_05_11/sp7021/linux/vicore_sdk/output/ .
+
+
+192.168.10.213\hankliao\work\driver_2022_06_02_repo\out\boot2linux_SDcard
+scp -r -P 22 hankliao@192.168.10.213:/home/hankliao/work/driver_2022_06_02_repo/out/boot2linux_SDcard/ .
+
+
+sudo dd if=ISP_SD_BOOOT.img of=/dev/sdb bs=1024
+sync
+
+export ARCH=arm64
+export CROSS_COMPILE=crossgcc/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+
+//0xf8187004 = 00000000
+
+devmem 0xf8187004
+devmem 0xf8187004 32 0x00000000
+
+
+export PKG_CONFIG_PATH=/usr/local/opencv_4.2.0/lib/pkgconfig
+export LD_LIBRARY_PATH=/usr/local/opencv_4.2.0/lib
+source ~/.bashrc 
+
+g++ -std=c++11 test.cpp `pkg-config --libs --cflags opencv4` -o result
+
+
+Systrace format:
+https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit
+新
+4:49
+ndk implement it as:
+utils/trace-dev.cpp
+
+
+參考網路上的一些作法, 寫一版systrace kernel space版本, 也可以用Chrome開
+http://swgit.vicorelogic.com/sp7021/linux/-/commit/0096d9e4db109dfd23785d20c8a4bc78a01bafb5
+code用法:
+#include <soc/vicore/systrace.h>
+ATRACE_BEGIN(ATRACE_TAG_ISP,"isp_video_interrupt");
+ATRACE_END(ATRACE_TAG_ISP);
+開機後, 需要Enable才會dump至trace buffer
+Ex:
+echo 1 > /sys/vicore_systrace/vicore_systrace/vicore_isp
+6:01
+目前Vio isp 量出的worse case (injector), 一張Frame大概1.7~1.8msec
+
+
+
+
+
+test code部分:
+ndk/tests/vio_intgr_test.cpp
+#define STREAM_ONOFF_LOOP_NUM 2      --> 如果是拿來dump不用on/off可改成1
+#define LOOP_COUNT_NUM 20                     --> 看一次要dump幾張
+#define DUMP_EN 0             --> 改成1重build就會開啟dump圖功能操作流程:
+devmem 0xf8187004 32 0x0
+cd root/arm64/
+./gtest_vio_intgr_test --gtest_filter=*vioinject_stereo_gary_640_480_2in_3out* input 檔案位置
+./DataSet/640_480/Img0.raw       -->左眼bin檔
+./DataSet/640_480/Img1.raw       -->右眼bin檔
+
+
+
+./gtest_vio_intgr_test --gtest_filter=*vioinject_stereo_gary_1280_720_2in_3out*
